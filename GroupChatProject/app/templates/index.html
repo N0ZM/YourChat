@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block content %}
+<main class="container">
+  <div class="py-5 text-center">
+    <h2>User page</h2>
+    <p class="lead">Select a friend to start chat!</p>
+  </div>
+
+  <div class="bd-example">
+      <table class="table">
+        <thead class="table-dark">
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">UserName</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for user in users %}
+          <tr>
+            <th scope="row"><a {% if not user.id == current_user.id %}href="{{ url_for('app.chat', to_=user.id) }}"{% endif %}>{{ user.id }}</a></th>
+            <td>{{ user.username }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+  </div>
+</main>
+{% endblock %}

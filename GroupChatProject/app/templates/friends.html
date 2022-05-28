@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+  <main>
+    <div class="py-5 text-center">
+      <h2>Friend list</h2>
+      <p class="lead">Select a friend to start chat!</p>
+    </div>
+        
+    <div class="bd-example">
+      <table class="table">
+        <thead class="table-dark">
+          <tr>
+            <th scope="col">Friend Name</th>
+            <th scope="col">Status</th>
+            <th scope="col">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for req in requesting %}
+          <tr>
+            <td>{{ req.username }}</td>
+            <td>Requesting</td>
+            <td>.</td>
+          </tr>
+          {% endfor %}
+          {% for req in requested %}
+          <tr>
+            <td>{{ req.username }}</td>
+            <td>Requested</td>
+            <td>
+              <form method="POST" action="{{ url_for('app.accept_user') }}" style="display: inline;">
+                <input type="hidden" name="user_id" value="{{ req.id }}">
+                <input type="submit" value="Accept">
+              </form>
+              /
+              <form method="POST" action="{{ url_for('app.reject_user') }}" style="display: inline;">
+                <input type="hidden" name="user_id" value="{{ req.id }}">
+                <input type="submit" value="Reject">
+              </form>
+            </td>
+          </tr>
+          {% endfor %}
+          {% for friend in friends %}
+          <tr>
+            <td><a {% if not friend.id == current_user.id %}href="{{ url_for('app.chat', to_=friend.id) }}"{% endif %}>{{ friend.username }}</a></td>
+            <td>Friend</td>
+            <td>
+              <form method="POST" action="{{ url_for('app.delete_friend') }}">
+                <input type="hidden" name="friend_id" value="{{ friend.id }}">
+                <input type="submit" value="Delete">
+              </form>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <div class="pt-5 text-center">
+      <h2>Friend request form</h2>
+      <p class="lead">Request a user to be your friend!</p>
+    </div>
+      
+      <div class="col-md-12 col-lg-12">
+        <form method="POST">
+          <div class="row g-3">
+            <div class="col-12">
+              {{ form.hidden_tag() }}
+              <!--<label for="code" class="form-label">Username</label>-->
+              {{ form.code.label(for="code", class="form-label") }}
+              <!--<input type="text" class="form-control" id="code" placeholder="user code" required>-->
+              {{ form.code(class="form-control", id="code", placeholder="user code") }}
+            </div>
+          </div>
+          <p>
+            {% with messages = get_flashed_messages() %}
+              {% if messages %}
+                {% for message in messages %}
+                  {{ message }}
+                {% endfor %}
+              {% endif %}
+            {% endwith %}
+          </p>
+          <!--<button class="w-100 btn btn-primary btn-lg mb-5" type="submit">Register</button>-->
+          {{ form.submit(class="btn btn-primary") }}
+        </form>
+      </div>
+    </div>
+  </main>
+</div>
+{% endblock %}

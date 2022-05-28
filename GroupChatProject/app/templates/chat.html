@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block content %}
+<main class="container">
+    {% for message in messages %}
+    {% if message.from_ == current_user.id %}
+    <div class="d-flex justify-content-end"><p class="p-2 bg-success rounded">{{ message.body }}</p></div>
+    {% else %}
+    <div class="d-flex justify-content-start"><p class="p-2 bg-white rounded">{{ message.body }}</p></div>
+    {% endif %}
+    {% endfor %}
+    <form method="POST">
+        <div class="mb-3">
+            {{ form.hidden_tag() }}
+            <!--<label for="exampleFormControlTextarea1" class="form-label">Example textarea</label>-->
+            {{ form.message.label(for="message", class="form-label") }}
+            <!--<textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>-->
+            {{ form.message(class="form-control", id="message", rows="3") }}
+            <div class="py-3">
+              {{ form.submit(class="btn btn-primary") }}
+            </div>
+        </div>
+    </form>
+</main>
+<script>
+  var body = document.getElementsByTagName("body");
+  body[0].classList.add("bg-info");
+  var textarea = document.getElementById("message");
+  textarea.innerHTML = "";
+</script>
+{% endblock %}
